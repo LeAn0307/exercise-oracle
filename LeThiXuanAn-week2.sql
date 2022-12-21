@@ -13,7 +13,7 @@ CREATE TABLE campus (
 CREATE TABLE position (
     positionid     VARCHAR2(5) NOT NULL,
     position       VARCHAR2(100),
-    campusdiscount DECIMAL(7, 2),
+    yearlyMembershipfee DECIMAL(7, 2),
     CONSTRAINT position_pk PRIMARY KEY ( positionid )
 );
 
@@ -91,20 +91,23 @@ ALTER TABLE ORDERSLINE
     ADD CONSTRAINT fk06_od FOREIGN KEY ( FOODITEMSID )
         REFERENCES FOODITEMS ( FOODITEMID )
 
---xOA 
-DROP TABLE campus;
+-- BAT DAU LAI TU DAU
+DROP TABLE campus CASCADE CONSTRAINTS;
 
-DROP TABLE prices;
+DROP TABLE prices CASCADE CONSTRAINTS;
 
-DROP TABLE fooditems;
+DROP TABLE fooditems CASCADE CONSTRAINTS;
 
-DROP TABLE members;
+DROP TABLE members CASCADE CONSTRAINTS;
 
-DROP TABLE orders;
+DROP TABLE orders CASCADE CONSTRAINTS;
 
-DROP TABLE ordersline;
+DROP TABLE ordersline CASCADE CONSTRAINTS;
 
-DROP TABLE position;
+DROP TABLE position CASCADE CONSTRAINTS ;
+
+--restart sequence
+DROP SEQUENCE prices_fooditemstypeid_SEQ
 
 
 -- 2. Tao sequence
@@ -139,7 +142,8 @@ insert into MEMBERS values('9','Bradley','Wilson','334 Statford Hall', '765-258-
 SELECT prices_fooditemstypeid_SEQ.Nextval FROM DUAL;
 
 --Nhap prices
-insert into PRICES values(1,'Beer/Wine', 5.50);
+insert into PRICES values(1,'milk', 9.50);
+insert into PRICES values(prices_fooditemstypeid_SEQ.Nexval,'Beer/Wine', 5.50);
 insert into PRICES values(prices_fooditemstypeid_SEQ.Nexval,'Beer/Wine', 5.50);
 insert into PRICES values(prices_fooditemstypeid_SEQ.Nextval,'Dessert', 2.75);
 insert into PRICES values(prices_fooditemstypeid_SEQ.Nextval,'Dinner', 15.50);
@@ -204,12 +208,13 @@ FROM
 
 select sequence_owner, sequence_name from dba_sequences;
 
--- 4. Li?t kê các thành viên v?i các c?t FirstName, LastName, Position,
--- CampusName, (YearlyMembershipFee / 12 ) Monthly_Dues. Sau ?ó s?p
--- x?p theo tên ??i h?c gi?m d?n, ti?p theo LastName t?ng d?n
+-- 4. lay FirstName, LastName, Position,
+-- CampusName, (YearlyMembershipFee / 12 ) Monthly_Dues. sau do sap xep
 
--- YearlyMembershipFee == CAMPUSDISCOUNT tai em dat ten sai 
-select M.FIRSTNAME,C.CAMPUSNAME , M.LASTNAME, P.POSITION , (C.CAMPUSDISCOUNT/12)MONTHLY_DUES
+select M.FIRSTNAME,C.CAMPUSNAME , M.LASTNAME, P.POSITION , (P.yearlyMembershipfee/12)MONTHLY_DUES
 from MEMBERS M, POSITION P, CAMPUS C
-WHERE M.POSITIONID = P.POSITIONID AND M.CAMPUSID= C.CAMPUSID
+WHERE M.POSITIONID = P.POSITIONID AND M.CAMPUSID = C.CAMPUSID
 ORDER BY M.LASTNAME ASC, C.CAMPUSNAME DESC
+
+
+
