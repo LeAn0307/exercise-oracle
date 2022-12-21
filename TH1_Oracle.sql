@@ -208,6 +208,7 @@ select sequence_owner, sequence_name from dba_sequences;
 -- CampusName, (YearlyMembershipFee / 12 ) Monthly_Dues. Sau ?ó s?p
 -- x?p theo tên ??i h?c gi?m d?n, ti?p theo LastName t?ng d?n
 
+-- YearlyMembershipFee == CAMPUSDISCOUNT tai em dat ten sai 
 select M.FIRSTNAME,C.CAMPUSNAME , M.LASTNAME, P.POSITION , (C.CAMPUSDISCOUNT/12)MONTHLY_DUES
 from MEMBERS M, POSITION P, CAMPUS C
 WHERE M.POSITIONID = P.POSITIONID AND M.CAMPUSID= C.CAMPUSID
